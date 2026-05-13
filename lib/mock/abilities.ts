@@ -1,0 +1,68 @@
+import type { Ability } from '@/lib/types/pokemon';
+
+export const abilitiesMock: Ability[] = [
+  {
+    slug: 'magic-guard',
+    nameEn: 'Magic Guard',
+    nameEs: 'Velo Misterio',
+    description: 'Solo recibe daño de ataques directos. Ignora daño indirecto como veneno, quemaduras o granizo.',
+    hidden: true,
+    slot: 3,
+  },
+  {
+    slug: 'multiscale',
+    nameEn: 'Multiscale',
+    nameEs: 'Multiescamas',
+    description: 'Reduce a la mitad el daño recibido cuando los PS están al máximo.',
+    hidden: true,
+    slot: 3,
+  },
+  {
+    slug: 'intimidate',
+    nameEn: 'Intimidate',
+    nameEs: 'Intimidación',
+    description: 'Al entrar en combate, reduce el Ataque de todos los rivales en un nivel.',
+    hidden: false,
+    slot: 1,
+  },
+  {
+    slug: 'levitate',
+    nameEn: 'Levitate',
+    nameEs: 'Levitación',
+    description: 'Levita sobre el suelo, siendo inmune a los movimientos de tipo Tierra.',
+    hidden: false,
+    slot: 1,
+  },
+  {
+    slug: 'speed-boost',
+    nameEn: 'Speed Boost',
+    nameEs: 'Impulso',
+    description: 'Al final de cada turno, aumenta la Velocidad en un nivel automáticamente.',
+    hidden: false,
+    slot: 1,
+  },
+  {
+    slug: 'cursed-body',
+    nameEn: 'Cursed Body',
+    nameEs: 'Cuerpo Maldito',
+    description: 'Al recibir un golpe, tiene un 30% de probabilidad de deshabilitar el movimiento del rival.',
+    hidden: false,
+    slot: 1,
+  },
+  {
+    slug: 'magnet-pull',
+    nameEn: 'Magnet Pull',
+    nameEs: 'Magnetismo',
+    description: 'Impide que los Pokémon de tipo Acero escapen o cambien de combate.',
+    hidden: false,
+    slot: 1,
+  },
+  {
+    slug: 'motor-drive',
+    nameEn: 'Motor Drive',
+    nameEs: 'Galvanismo',
+    description: 'Los movimientos de tipo Eléctrico no causan daño; en su lugar, aumentan la Velocidad.',
+    hidden: false,
+    slot: 1,
+  },
+];
