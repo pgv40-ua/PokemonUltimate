@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { motion, useReducedMotion, useInView } from 'framer-motion';
 import { cn } from '@/lib/utils/cn';
-import { easing } from '@/lib/utils/motion';
+import { easing } from '@/lib/motion/tokens';
 
 interface StatBarProps {
   label: string;
