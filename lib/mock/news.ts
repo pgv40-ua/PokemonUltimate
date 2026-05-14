@@ -1,6 +1,17 @@
 import type { NewsItem } from '@/lib/types/pokemon';
 
 export const newsMock: NewsItem[] = [
+  // ── Semana actual (top 5 en la landing) ──────────────────────────────────
+  {
+    slug: 'legends-za-nuevos-pokemon-confirmados',
+    title: 'Legends Z-A confirma 3 nuevos Pokémon para Kalos',
+    category: 'Juego',
+    date: '2026-05-12',
+    excerpt: 'Nintendo Direct reveló tres nuevas criaturas exclusivas de la región de Kalos. Incluyen un Pokémon de tipo Hada/Dragón nunca visto y una nueva Mega Evolución.',
+    featured: false,
+    gradientFrom: '#C8335A',
+    gradientTo: '#7A0028',
+  },
   {
     slug: 'pokemon-legends-za-todo-lo-que-sabemos',
     title: 'Pokémon Legends Z-A — Todo lo que sabemos',
@@ -40,5 +51,46 @@ export const newsMock: NewsItem[] = [
     featured: false,
     gradientFrom: '#00BFFF',
     gradientTo: '#0050A0',
+  },
+  // ── Abril 2026 (visibles en la página /novedades) ────────────────────────
+  {
+    slug: 'regionals-madrid-top-8-abril',
+    title: 'Top 8 del Regionals de Madrid — Abril 2026',
+    category: 'Torneo',
+    date: '2026-04-28',
+    excerpt: 'El torneo regional más importante de España coronó a un equipo centrado en Urshifu-Rápido y Rillaboom. Analizamos los sets ganadores.',
+    featured: false,
+    gradientFrom: '#D4A017',
+    gradientTo: '#8B6400',
+  },
+  {
+    slug: 'pokehorizons-season2-trailer',
+    title: 'PokéHorizons Season 2 — Tráiler oficial',
+    category: 'Anime',
+    date: '2026-04-21',
+    excerpt: 'El tráiler de la segunda temporada presenta a Kieran como nuevo personaje recurrente y confirma la aparición de Pokémon míticos de Paldea.',
+    featured: false,
+    gradientFrom: '#9D3FBE',
+    gradientTo: '#5B1E7A',
+  },
+  {
+    slug: 'smogon-ban-palafin-hero',
+    title: 'Smogon banea a Palafin-Hero del OU',
+    category: 'Competitivo',
+    date: '2026-04-14',
+    excerpt: 'Tras un periodo de prueba de 6 semanas, Smogon ha votado banear a Palafin-Hero al Ubers. Su combo de Jet Punch + Acrobatics resultó imposible de contener.',
+    featured: false,
+    gradientFrom: '#1E6FA8',
+    gradientTo: '#0A3360',
+  },
+  {
+    slug: 'pokemon-go-mes-legendarios-abril',
+    title: 'Pokémon GO — Mes de los Legendarios',
+    category: 'Juego',
+    date: '2026-04-07',
+    excerpt: 'Durante todo abril, Pokémon GO celebra el Mes de los Legendarios con incursiones de Mewtwo, Rayquaza y la primera aparición de Shiny Regieleki.',
+    featured: false,
+    gradientFrom: '#2ECC71',
+    gradientTo: '#1A7A43',
   },
 ];
