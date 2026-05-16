@@ -1,11 +1,10 @@
 'use client';
 
 import type { FC } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
 import { featuredPokemonMock } from '@/lib/mock/featured';
 import { PokemonCard } from '@/components/ui/PokemonCard';
 import type { FeaturedPokemon, PokemonCardData } from '@/lib/types/pokemon';
-import { easing, stagger } from '@/lib/motion/tokens';
+import { Reveal } from '@/components/ui/Reveal';
 
 // ─── Data adapter ────────────────────────────────────────────────────────────
 
@@ -20,45 +19,14 @@ function toCardData(fp: FeaturedPokemon): PokemonCardData {
   };
 }
 
-// ─── Layout helpers ──────────────────────────────────────────────────────────
-
 // All 6 cards rendered equally — uniform 3-column bento grid
 function getColSpan(): string {
   return 'col-span-1';
 }
 
-// ─── Animation variants ───────────────────────────────────────────────────────
-
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: stagger.cards },
-  },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 32 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: easing },
-  },
-};
-
-const headerVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: easing },
-  },
-};
-
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export const Destacados: FC = () => {
-  const prefersReduced = useReducedMotion();
-
   return (
     <section
       id="destacados"
@@ -74,82 +42,43 @@ export const Destacados: FC = () => {
       <div className="container-app">
         {/* ── Section header ───────────────────────────────────────────── */}
         <div className="relative mb-12 lg:mb-16">
-          {/* Decorative section number */}
           <span
             aria-hidden="true"
-            className="pointer-events-none select-none absolute -top-8 left-0 font-display font-black text-[160px] leading-none opacity-[0.04] blur-sm text-white"
+            className="pointer-events-none select-none absolute -top-8 left-0 font-display font-black leading-none opacity-[0.04] blur-sm text-white"
+            style={{ fontSize: 'clamp(80px, 16vw, 160px)' }}
           >
             02
           </span>
 
-          {prefersReduced ? (
-            <div>
-              <p className="eyebrow mb-4 text-accent-blue">
-                Meta competitivo &middot; Temporada actual
-              </p>
-              <h2
-                id="destacados-heading"
-                className="font-display font-black uppercase text-text-primary"
-                style={{ fontSize: 'clamp(40px, 5vw, 72px)', lineHeight: 1 }}
-              >
-                Los más poderosos del momento
-              </h2>
-              <p className="mt-4 text-text-secondary font-body text-base max-w-xl">
-                Los Pokémon que dominan el meta SV OU esta temporada.
-              </p>
-            </div>
-          ) : (
-            <motion.div
-              variants={headerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-60px' }}
+          <Reveal margin="-60px">
+            <p className="eyebrow mb-4 text-accent-blue">
+              Meta competitivo &middot; Temporada actual
+            </p>
+            <h2
+              id="destacados-heading"
+              className="font-display font-black uppercase text-text-primary"
+              style={{ fontSize: 'clamp(40px, 5vw, 72px)', lineHeight: 1 }}
             >
-              <p className="eyebrow mb-4 text-accent-blue">
-                Meta competitivo &middot; Temporada actual
-              </p>
-              <h2
-                id="destacados-heading"
-                className="font-display font-black uppercase text-text-primary"
-                style={{ fontSize: 'clamp(40px, 5vw, 72px)', lineHeight: 1 }}
-              >
-                Los más poderosos del momento
-              </h2>
-              <p className="mt-4 text-text-secondary font-body text-base max-w-xl">
-                Los Pokémon que dominan el meta SV OU esta temporada.
-              </p>
-            </motion.div>
-          )}
+              Los más poderosos del momento
+            </h2>
+            <p className="mt-4 text-text-secondary font-body text-base max-w-xl">
+              Los Pokémon que dominan el meta SV OU esta temporada.
+            </p>
+          </Reveal>
         </div>
 
         {/* ── Bento grid ───────────────────────────────────────────────── */}
-        {prefersReduced ? (
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-            {featuredPokemonMock.map((fp) => (
-              <div key={fp.id} className={getColSpan()}>
-                <BentoCard fp={fp} featured={false} />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
-            className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6"
-          >
-            {featuredPokemonMock.map((fp) => (
-              <motion.div
-                key={fp.id}
-                variants={cardVariants}
-                className={getColSpan()}
-              >
-                <BentoCard fp={fp} featured={false} />
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
+        <Reveal
+          stagger={0.08}
+          margin="-60px"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6"
+        >
+          {featuredPokemonMock.map((fp) => (
+            <div key={fp.id} className={getColSpan()}>
+              <BentoCard fp={fp} featured={false} />
+            </div>
+          ))}
+        </Reveal>
       </div>
     </section>
   );

@@ -4,19 +4,13 @@ import { Hero } from '@/components/sections/Hero';
 import { TypeTicker } from '@/components/sections/TypeTicker';
 import { Novedades } from '@/components/sections/Novedades';
 import { Destacados } from '@/components/sections/Destacados';
-import { Evolutions } from '@/components/sections/Evolutions';
-import { AbilitiesNatures } from '@/components/sections/AbilitiesNatures';
 import { FinalCTA } from '@/components/sections/FinalCTA';
 import { Footer } from '@/components/sections/Footer';
 
-// Heavy client-only sections — deferred to reduce initial JS bundle
-const PokedexExplorer = dynamic(
-  () => import('@/components/sections/PokedexExplorer').then((m) => ({ default: m.PokedexExplorer })),
-  { ssr: false }
-);
-const TypesMatchup = dynamic(
-  () => import('@/components/sections/TypesMatchup').then((m) => ({ default: m.TypesMatchup }))
-);
+// Heavy client-only section — deferred to reduce initial JS bundle.
+// PokedexExplorer, Evolutions, TypesMatchup and AbilitiesNatures live in their
+// own routes (/pokedex, /evoluciones, /tipos, /habilidades) and are not
+// inlined on the landing.
 const HallOfFame = dynamic(
   () => import('@/components/sections/HallOfFame').then((m) => ({ default: m.HallOfFame })),
   { ssr: false }
@@ -31,10 +25,6 @@ export default function HomePage() {
         <TypeTicker />
         <Novedades />
         <Destacados />
-        <PokedexExplorer />
-        <Evolutions />
-        <TypesMatchup />
-        <AbilitiesNatures />
         <HallOfFame />
         <FinalCTA />
       </main>

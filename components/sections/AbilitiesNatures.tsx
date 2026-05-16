@@ -1,7 +1,10 @@
+'use client';
+
 import type { FC } from 'react';
 
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
+import { Reveal } from '@/components/ui/Reveal';
 import { abilitiesMock } from '@/lib/mock/abilities';
 import { naturesMock } from '@/lib/mock/natures';
 import type { Nature } from '@/lib/types/pokemon';
@@ -95,36 +98,39 @@ export const AbilitiesNatures: FC = () => {
             aria-hidden="true"
             className="
               font-display font-black select-none pointer-events-none
-              text-[140px] lg:text-[200px] leading-none
+              leading-none
               opacity-[0.04] blur-sm
               absolute -top-8 -left-2 lg:-left-4
               text-white
             "
+            style={{ fontSize: 'clamp(80px, 18vw, 200px)' }}
           >
             07
           </span>
 
-          <p className="eyebrow mb-4">Guía competitiva &middot; Temporada actual</p>
+          <Reveal>
+            <p className="eyebrow mb-4">Guía competitiva &middot; Temporada actual</p>
 
-          <h2
-            id="abilities-natures-heading"
-            className="
-              font-display font-black uppercase
-              text-4xl sm:text-5xl lg:text-6xl xl:text-7xl
-              text-white leading-none tracking-tight
-              max-w-3xl
-            "
-          >
-            Construye tu equipo perfecto
-          </h2>
+            <h2
+              id="abilities-natures-heading"
+              className="
+                font-display font-black uppercase
+                text-4xl sm:text-5xl lg:text-6xl xl:text-7xl
+                text-white leading-none tracking-tight
+                max-w-3xl
+              "
+            >
+              Construye tu equipo perfecto
+            </h2>
 
-          <p className="mt-5 font-body text-text-secondary text-base sm:text-lg max-w-xl">
-            Las habilidades y naturalezas que marcan la diferencia en el meta.
-          </p>
+            <p className="mt-5 font-body text-text-secondary text-base sm:text-lg max-w-xl">
+              Las habilidades y naturalezas que marcan la diferencia en el meta.
+            </p>
+          </Reveal>
         </div>
 
         {/* ── Two-column layout ───────────────────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <Reveal stagger={0.12} className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12">
           {/* ═══════════════════════════════════════════════════════
               Column 1 — Abilities
           ════════════════════════════════════════════════════════ */}
@@ -341,7 +347,7 @@ export const AbilitiesNatures: FC = () => {
               </div>
             </div>
           </div>
-        </div>
+        </Reveal>
 
         {/* CTA — link to full habilidades page */}
         <div className="mt-12 flex justify-center">

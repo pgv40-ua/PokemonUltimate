@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { hallOfFameMock } from '@/lib/mock/hall-of-fame';
 import { TypeBadge } from '@/components/ui/TypeBadge';
@@ -21,7 +21,7 @@ function HofCard({ pokemon, isActive }: HofCardProps) {
   return (
     <div
       className={cn(
-        'w-64 rounded-card overflow-hidden glass-card select-none',
+        'w-[calc(100vw-4rem)] max-w-[260px] sm:w-56 lg:w-64 rounded-card overflow-hidden glass-card select-none',
         'transition-[border-color,box-shadow] duration-slow ease-smooth',
       )}
       style={
@@ -36,7 +36,7 @@ function HofCard({ pokemon, isActive }: HofCardProps) {
     >
       {/* Gradient placeholder — no imageUrl available for any entry */}
       <div
-        className="relative w-full h-52 flex items-center justify-center overflow-hidden"
+        className="relative w-full h-44 sm:h-52 flex items-center justify-center overflow-hidden"
         style={{
           background: `linear-gradient(135deg, ${pokemon.typeColor}60 0%, rgba(10,10,15,0.95) 100%)`,
         }}
@@ -48,7 +48,7 @@ function HofCard({ pokemon, isActive }: HofCardProps) {
         </span>
 
         {/* Large initial as decorative placeholder */}
-        <span className="font-display font-black text-[80px] leading-none text-white/8 select-none pointer-events-none">
+        <span className="font-display font-black text-[60px] sm:text-[80px] leading-none text-white/8 select-none pointer-events-none">
           {pokemon.name.es.charAt(0)}
         </span>
 
@@ -147,6 +147,20 @@ export function HallOfFame() {
   const shouldReduceMotion = useReducedMotion();
   const total = hallOfFameMock.length;
 
+  // Track viewport width so neighbour cards land closer on mobile.
+  const [cardOffsetPx, setCardOffsetPx] = useState(260);
+  useEffect(() => {
+    const compute = () => {
+      const w = window.innerWidth;
+      if (w < 640) setCardOffsetPx(160);
+      else if (w < 1024) setCardOffsetPx(220);
+      else setCardOffsetPx(260);
+    };
+    compute();
+    window.addEventListener('resize', compute);
+    return () => window.removeEventListener('resize', compute);
+  }, []);
+
   // Wrapping circular offset: range (-total/2, total/2]
   const getOffset = useCallback(
     (index: number): number => {
@@ -174,13 +188,13 @@ export function HallOfFame() {
 
       const scale = offset === 0 ? 1 : absOffset === 1 ? 0.82 : 0.68;
       const opacity = offset === 0 ? 1 : absOffset === 1 ? 0.55 : 0.3;
-      const x = offset * 260;
+      const x = offset * cardOffsetPx;
       const rotateY = -offset * 12;
       const zIndex = offset === 0 ? 10 : absOffset === 1 ? 5 : 1;
 
       return { visible: true, scale, opacity, x, rotateY, zIndex } as const;
     },
-    [shouldReduceMotion],
+    [shouldReduceMotion, cardOffsetPx],
   );
 
   const prev = useCallback(
@@ -211,7 +225,8 @@ export function HallOfFame() {
         <div className="relative mb-16 lg:mb-20">
           {/* Decorative section number */}
           <span
-            className="absolute -top-8 left-0 font-display font-black text-[160px] leading-none opacity-[0.04] blur-sm select-none pointer-events-none"
+            className="absolute -top-8 left-0 font-display font-black leading-none opacity-[0.04] blur-sm select-none pointer-events-none"
+            style={{ fontSize: 'clamp(80px, 16vw, 160px)' }}
             aria-hidden="true"
           >
             08
@@ -262,7 +277,7 @@ export function HallOfFame() {
         >
           {/* 3D track */}
           <div
-            className="relative h-[460px] flex items-center justify-center overflow-hidden"
+            className="relative h-[400px] sm:h-[440px] lg:h-[460px] flex items-center justify-center overflow-hidden"
             style={{ perspective: '1200px' }}
           >
             {hallOfFameMock.map((pokemon, index) => {

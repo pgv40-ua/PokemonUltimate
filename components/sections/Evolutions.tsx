@@ -1,23 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
 import { Button } from '@/components/ui/Button';
 import { TypeBadge } from '@/components/ui/TypeBadge';
+import { EvolutionArrow } from '@/components/pokemon/EvolutionArrow';
 import { evolutionChainsMock } from '@/lib/mock/evolutions';
 import { pokemonMock } from '@/lib/mock/pokemon';
-import type { EvolutionMethod, Pokemon } from '@/lib/types/pokemon';
-
-// ── Helpers ────────────────────────────────────────────────────────────────────
-
-function methodLabel(method: EvolutionMethod | null): string {
-  if (!method) return '';
-  if (method.trigger === 'level-up' && method.minLevel) return `Nv. ${method.minLevel}`;
-  if (method.trigger === 'trade') return 'Comerciar';
-  if (method.trigger === 'use-item' && method.item) return method.item;
-  if (method.trigger === 'friendship') return 'Amistad';
-  return 'Especial';
-}
+import type { Pokemon } from '@/lib/types/pokemon';
 
 // Enrich chains: join each stage with its full Pokemon record
 const enrichedChains = evolutionChainsMock.map((chain) => ({
@@ -55,13 +46,31 @@ const reducedChainVariants = {
 
 interface PokemonStageCardProps {
   pokemon: Pokemon;
+  highlight: boolean;
 }
 
-function PokemonStageCard({ pokemon }: PokemonStageCardProps) {
+function PokemonStageCard({ pokemon, highlight }: PokemonStageCardProps) {
+  const reduced = useReducedMotion();
   return (
-    <article
+    <motion.article
       className="glass-card overflow-hidden text-center w-full lg:w-44 xl:w-48 shrink-0 flex flex-col"
       aria-label={`${pokemon.name.es}, #${pokemon.id.toString().padStart(4, '0')}`}
+      animate={
+        reduced
+          ? undefined
+          : highlight
+          ? { scale: [1, 1.04, 1] }
+          : { scale: 1 }
+      }
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      style={
+        highlight
+          ? {
+              boxShadow: `0 0 36px ${pokemon.typeColor}66, 0 8px 32px rgba(0,0,0,0.45)`,
+              borderColor: `${pokemon.typeColor}80`,
+            }
+          : undefined
+      }
     >
       {/* Visual placeholder — gradient from primary type color */}
       <div
@@ -93,56 +102,7 @@ function PokemonStageCard({ pokemon }: PokemonStageCardProps) {
           ))}
         </div>
       </div>
-    </article>
-  );
-}
-
-interface EvoArrowProps {
-  method: EvolutionMethod | null;
-}
-
-function EvoArrow({ method }: EvoArrowProps) {
-  const label = methodLabel(method);
-  return (
-    /*
-     * aria-hidden: the arrow is purely decorative — the method label text is
-     * readable by screen readers as part of the surrounding list context.
-     */
-    <div className="group flex flex-col items-center gap-1.5 shrink-0 py-2 lg:py-0" aria-hidden="true">
-      {/* Desktop: right-pointing arrow */}
-      <svg
-        className="w-8 h-8 hidden lg:block text-text-muted transition-colors duration-base ease-smooth group-hover:text-accent-yellow group-hover:drop-shadow-[0_0_8px_rgba(255,215,0,0.8)]"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        focusable="false"
-      >
-        <path d="M5 12h14M12 5l7 7-7 7" />
-      </svg>
-
-      {/* Mobile: down-pointing arrow */}
-      <svg
-        className="w-8 h-8 lg:hidden text-text-muted transition-colors duration-base ease-smooth group-hover:text-accent-yellow group-hover:drop-shadow-[0_0_8px_rgba(255,215,0,0.8)]"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        focusable="false"
-      >
-        <path d="M12 5v14M5 12l7 7 7-7" />
-      </svg>
-
-      {label && (
-        <span className="font-mono text-[10px] text-text-muted text-center leading-tight max-w-[72px]">
-          {label}
-        </span>
-      )}
-    </div>
+    </motion.article>
   );
 }
 
@@ -151,6 +111,10 @@ function EvoArrow({ method }: EvoArrowProps) {
 export function Evolutions() {
   const shouldReduceMotion = useReducedMotion();
   const variants = shouldReduceMotion ? reducedChainVariants : chainVariants;
+
+  // Tracks the most-recently triggered (chainId, stageIndex) so the matching
+  // post-evolution card can pulse along with the flash.
+  const [highlight, setHighlight] = useState<string | null>(null);
 
   return (
     <section
@@ -161,11 +125,9 @@ export function Evolutions() {
       <div className="container-app">
         {/* ── Section header ─────────────────────────────────────────────── */}
         <div className="relative mb-12 lg:mb-16">
-          {/* Decorative section number — per catalog, sections 4 & 5 only have this.
-              Section 7 (Evolutions) does NOT have a decorative number per the catalog spec.
-              The number below follows the task brief ("05") which maps to Evolutions' visual position. */}
           <span
-            className="absolute -top-6 left-0 font-display font-black text-[10rem] leading-none select-none pointer-events-none blur-sm text-white opacity-[0.04]"
+            className="absolute -top-6 left-0 font-display font-black leading-none select-none pointer-events-none blur-sm text-white opacity-[0.04]"
+            style={{ fontSize: 'clamp(80px, 16vw, 160px)' }}
             aria-hidden="true"
           >
             05
@@ -198,17 +160,35 @@ export function Evolutions() {
               role="group"
               aria-label={`Cadena de evolución ${chainIndex + 1}: ${chain.stages.map((s) => s.pokemon.name.es).join(' → ')}`}
             >
-              {chain.stages.map((stage, stageIndex) => (
-                <div
-                  key={stage.pokemonId}
-                  className="flex flex-col lg:flex-row items-center gap-4 lg:gap-6 w-full lg:w-auto"
-                >
-                  {/* Arrow + method — shown before each stage except the first */}
-                  {stageIndex > 0 && <EvoArrow method={stage.method} />}
+              {chain.stages.map((stage, stageIndex) => {
+                const highlightKey = `${chain.id}:${stageIndex}`;
+                return (
+                  <div
+                    key={stage.pokemonId}
+                    className="flex flex-col lg:flex-row items-center gap-4 lg:gap-6 w-full lg:w-auto"
+                  >
+                    {stageIndex > 0 && (
+                      <EvolutionArrow
+                        method={stage.method}
+                        glowColor={stage.pokemon.typeColor}
+                        onTrigger={() => {
+                          setHighlight(highlightKey);
+                          window.setTimeout(() => {
+                            setHighlight((curr) =>
+                              curr === highlightKey ? null : curr,
+                            );
+                          }, 900);
+                        }}
+                      />
+                    )}
 
-                  <PokemonStageCard pokemon={stage.pokemon} />
-                </div>
-              ))}
+                    <PokemonStageCard
+                      pokemon={stage.pokemon}
+                      highlight={highlight === highlightKey}
+                    />
+                  </div>
+                );
+              })}
             </motion.div>
           ))}
         </div>
@@ -218,6 +198,7 @@ export function Evolutions() {
           <Button
             variant="secondary"
             size="md"
+            magnetic
             iconRight={
               <svg
                 className="w-4 h-4 shrink-0"

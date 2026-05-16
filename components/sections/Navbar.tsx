@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { easing } from '@/lib/motion/tokens';
+import { MagneticLink } from '@/components/ui/MagneticLink';
 
 const NAV_LINKS = [
   { label: 'Pokédex', href: '/pokedex' },
@@ -16,13 +17,11 @@ const NAV_LINKS = [
 const menuVariants = {
   closed: {
     opacity: 0,
-    y: -20,
     transition: { duration: 0.2 },
   },
   open: {
     opacity: 1,
-    y: 0,
-    transition: { duration: 0.3, ease: easing },
+    transition: { duration: 0.25, ease: easing },
   },
 };
 
@@ -65,11 +64,15 @@ export function Navbar() {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      // iOS sometimes ignores body overflow inside fixed dialogs — pin html as well.
+      document.documentElement.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     }
     return () => {
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     };
   }, [isOpen]);
 
@@ -79,17 +82,8 @@ export function Navbar() {
   return (
     <>
       <header
-        className="fixed top-0 inset-x-0 z-50 h-16 flex items-center px-6 lg:px-8 justify-between"
-        style={{
-          background: (scrolled || isOpen) ? 'rgba(10,10,15,0.97)' : 'transparent',
-          backdropFilter: (scrolled || isOpen) ? 'blur(16px)' : 'none',
-          WebkitBackdropFilter: (scrolled || isOpen) ? 'blur(16px)' : 'none',
-          borderBottom: (scrolled || isOpen)
-            ? '1px solid rgba(255,255,255,0.08)'
-            : '1px solid transparent',
-          transition:
-            'background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease',
-        }}
+        data-active={scrolled || isOpen ? 'true' : 'false'}
+        className="navbar-shell fixed top-0 inset-x-0 z-50 h-16 flex items-center px-4 sm:px-6 lg:px-8 justify-between"
       >
         {/* Logo */}
         <a
@@ -118,12 +112,13 @@ export function Navbar() {
 
         {/* Desktop CTA + Mobile hamburger */}
         <div className="flex items-center gap-4">
-          <a
+          <MagneticLink
             href="/pokedex"
+            strength={0.25}
             className="hidden lg:inline-flex items-center gap-1 border border-[#FFD700]/50 text-[#FFD700] px-4 py-1.5 rounded-full text-sm font-body font-medium hover:bg-[#FFD700]/10 transition-colors duration-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFD700]"
           >
             Explorar Pokédex →
-          </a>
+          </MagneticLink>
 
           <button
             type="button"
@@ -180,12 +175,7 @@ export function Navbar() {
             role="dialog"
             aria-modal="true"
             aria-label="Menú de navegación"
-            className="fixed inset-x-0 top-16 bottom-0 z-40 lg:hidden flex flex-col items-center justify-center gap-2"
-            style={{
-              background: 'rgba(10,10,15,0.97)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-            }}
+            className="mobile-menu fixed inset-x-0 z-[45] lg:hidden flex flex-col items-center justify-center gap-2 overflow-y-auto"
             variants={activeMenuVariants}
             initial="closed"
             animate="open"
@@ -193,14 +183,14 @@ export function Navbar() {
           >
             <nav
               aria-label="Navegación móvil"
-              className="flex flex-col items-center gap-6 w-full px-6"
+              className="flex flex-col items-center gap-5 sm:gap-6 w-full px-6 py-8"
             >
               {NAV_LINKS.map(({ label, href }, i) => (
                 <motion.a
                   key={href}
                   href={href}
                   onClick={closeMenu}
-                  className="font-display font-black text-3xl text-white hover:text-[#FFD700] transition-colors duration-base text-center w-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFD700] rounded-sm"
+                  className="font-display font-black text-2xl sm:text-3xl text-white hover:text-[#FFD700] transition-colors duration-base text-center w-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFD700] rounded-sm"
                   variants={activeLinkVariants}
                   custom={i}
                 >

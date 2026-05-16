@@ -1,12 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { FC } from 'react';
 import {
   motion,
   useReducedMotion,
   useScroll,
-  useTransform,
 } from 'framer-motion';
 import Particles, { initParticlesEngine } from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
@@ -19,6 +18,8 @@ import {
   heroContentReduced,
   heroItemReduced,
 } from '@/lib/motion/tokens';
+import { useParallaxLayer } from '@/lib/hooks/useParallaxLayer';
+import { MagneticLink } from '@/components/ui/MagneticLink';
 
 // Module-level guard prevents double-initialization on React 18 Strict Mode double-mount.
 let particlesEngineReady = false;
@@ -67,11 +68,28 @@ const lightningTransition = (delay: number) => ({
 
 export const Hero: FC = () => {
   const shouldReduceMotion = useReducedMotion();
-  const { scrollY } = useScroll();
+  const heroRef = useRef<HTMLElement>(null);
 
-  // Parallax: background moves at ~0.3x scroll speed (18% over 600px scroll).
-  // We gate this behind shouldReduceMotion to avoid vestibular-triggering motion.
-  const bgY = useTransform(scrollY, [0, 600], ['0%', '18%']);
+  // Tie parallax to the hero's own scroll progress: 0 when its top hits the
+  // viewport top, 1 when its bottom exits. Each layer drifts at a distinct
+  // speed for cinematic depth (deep < mid < near < foreground).
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  });
+
+  const bgLayer = useParallaxLayer(scrollYProgress, 'mid', {
+    scale: [1, 1.05],
+  });
+  const overlayLayer = useParallaxLayer(scrollYProgress, 'near', {
+    opacity: [0.35, 0.65],
+  });
+  const particlesLayer = useParallaxLayer(scrollYProgress, 'deep', {
+    opacity: [1, 0.4],
+  });
+  const lightningLayer = useParallaxLayer(scrollYProgress, 'foreground', {
+    opacity: [1, 0.2],
+  });
 
   // Particles are hidden on reduced-motion AND on mobile (width < 768).
   // We evaluate window.innerWidth only on the client to avoid SSR mismatch.
@@ -109,18 +127,19 @@ export const Hero: FC = () => {
 
   return (
     <section
+      ref={heroRef}
       id="hero"
       aria-labelledby="hero-heading"
-      className="relative min-h-screen overflow-hidden flex items-center justify-center snap-start"
+      className="relative min-h-[100svh] overflow-hidden flex items-center justify-center snap-start pt-20 sm:pt-16"
     >
-      {/* ── Layer z-0: parallax background ── */}
-      {/* motion.div so we can apply the scroll-driven y transform.
-          GPU-accelerated: only `transform` (translate) is animated — no layout props. */}
+      {/* ── Layer z-0: deep background — Zekrom video stand-in ──
+          Drifts slowest of all layers (mid intensity). Subtle scale gives
+          breathing depth without pixel rounding. */}
       <motion.div
         className="absolute inset-0 z-0"
         aria-hidden="true"
         id="hero-background"
-        style={{ y: shouldReduceMotion ? undefined : bgY }}
+        style={{ y: bgLayer.y, scale: bgLayer.scale }}
       >
         <div
           className="w-full h-full"
@@ -131,20 +150,29 @@ export const Hero: FC = () => {
         />
       </motion.div>
 
-      {/* ── Layer z-10: overlay semitransparente para contraste del texto ── */}
-      <div
-        className="absolute inset-0 z-10"
+      {/* ── Layer z-10: vignette overlay — drifts faster than the bg and
+          fades darker toward the bottom of the section so text gains contrast
+          as the user scrolls. */}
+      <motion.div
+        className="absolute inset-0 z-10 pointer-events-none"
         aria-hidden="true"
-        style={{ background: 'rgba(10, 10, 15, 0.35)' }}
+        style={{
+          y: overlayLayer.y,
+          opacity: overlayLayer.opacity,
+          background:
+            'radial-gradient(ellipse 100% 80% at 50% 50%, transparent 30%, rgba(10,10,15,0.55) 70%, rgba(10,10,15,0.85) 100%)',
+        }}
       />
 
       {/* ── Layer z-20: electric particles ──
           Lazy-mounted: only rendered after client-side check confirms
-          non-mobile + non-reduced-motion. Falls back to empty container. */}
-      <div
+          non-mobile + non-reduced-motion. Drifts barely (deep intensity)
+          and fades as the section scrolls past. */}
+      <motion.div
         id="hero-particles-container"
         className="absolute inset-0 z-20 pointer-events-none"
         aria-hidden="true"
+        style={{ y: particlesLayer.y, opacity: particlesLayer.opacity }}
       >
         {showParticles && (
           <Particles
@@ -153,15 +181,15 @@ export const Hero: FC = () => {
             className="absolute inset-0"
           />
         )}
-      </div>
+      </motion.div>
 
       {/* ── Layer z-30: lightning bolt SVGs ──
-          motion.path with pathLength drives stroke-dashoffset internally
-          (Framer Motion maps pathLength 0→1 to stroke-dashoffset animation).
-          Reduced-motion: static paths with opacity: 1, no animation. */}
-      <div
+          Foreground intensity (drifts most) and fades fastest so the bolts
+          read as flashes anchored to the hero, not the page. */}
+      <motion.div
         className="absolute top-0 left-0 w-64 h-64 z-30 opacity-20"
         aria-hidden="true"
+        style={{ y: lightningLayer.y, opacity: lightningLayer.opacity }}
       >
         <svg
           viewBox="0 0 200 200"
@@ -212,11 +240,12 @@ export const Hero: FC = () => {
             </>
           )}
         </svg>
-      </div>
+      </motion.div>
 
-      <div
+      <motion.div
         className="absolute bottom-0 right-0 w-64 h-64 z-30 opacity-20 rotate-180"
         aria-hidden="true"
+        style={{ y: lightningLayer.y, opacity: lightningLayer.opacity }}
       >
         <svg
           viewBox="0 0 200 200"
@@ -245,7 +274,7 @@ export const Hero: FC = () => {
             />
           )}
         </svg>
-      </div>
+      </motion.div>
 
       {/* ── Layer z-40: main content — staggered fade-in on mount ──
           motion.div acts as the orchestrating parent; children inherit
@@ -288,10 +317,10 @@ export const Hero: FC = () => {
           className="flex flex-col sm:flex-row gap-4 mt-10 justify-center lg:justify-start"
           variants={itemVariants}
         >
-          {/* CTA primario — amarillo */}
-          <a
+          {/* CTA primario — amarillo, magnético */}
+          <MagneticLink
             href="#pokédex"
-            className="inline-flex items-center justify-center gap-2 bg-accent-yellow text-bg font-display font-bold px-8 py-4 rounded-full text-base hover:bg-white hover:shadow-glow-yellow transition-all duration-base ease-smooth focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            className="inline-flex items-center justify-center gap-2 bg-accent-yellow text-bg font-display font-bold px-8 py-4 rounded-full text-base hover:bg-white hover:shadow-glow-yellow transition-[background-color,box-shadow,color] duration-base ease-smooth focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
             Explorar la Pokédex
             <svg
@@ -305,23 +334,26 @@ export const Hero: FC = () => {
             >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
-          </a>
+          </MagneticLink>
 
-          {/* CTA secundario — outline blanco */}
-          <a
+          {/* CTA secundario — outline blanco, magnético */}
+          <MagneticLink
             href="#novedades"
-            className="inline-flex items-center justify-center gap-2 border border-white/30 text-white font-display font-medium px-8 py-4 rounded-full text-base hover:bg-white/10 hover:border-white/60 transition-all duration-base ease-smooth focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            strength={0.2}
+            className="inline-flex items-center justify-center gap-2 border border-white/30 text-white font-display font-medium px-8 py-4 rounded-full text-base hover:bg-white/10 hover:border-white/60 transition-[background-color,border-color] duration-base ease-smooth focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
             Ver novedades →
-          </a>
+          </MagneticLink>
         </motion.div>
       </motion.div>
 
       {/* ── Badge glassmorphism flotante — Zekrom (inferior izquierda) ──
-          Extra delay so it lands after the main content stagger completes. */}
+          Extra delay so it lands after the main content stagger completes.
+          Hidden under sm to avoid stacking under the CTAs and scroll
+          indicator on tight phone screens. */}
       <motion.div
         id="hero-badge"
-        className="absolute bottom-24 left-6 lg:left-8 z-40 glass-card px-4 py-3 rounded-xl max-w-xs"
+        className="hidden sm:flex absolute bottom-24 left-4 sm:left-6 lg:left-8 z-40 glass-card px-4 py-3 rounded-xl max-w-[calc(100vw-2rem)] sm:max-w-xs"
         aria-label="Pokémon destacado: Zekrom, tipo Dragón y Eléctrico, número 644"
         initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
         animate={{ opacity: 1, y: 0 }}
