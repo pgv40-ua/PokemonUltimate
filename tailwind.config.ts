@@ -24,7 +24,7 @@ const config: Config = {
 
         'text-primary': '#FFFFFF',
         'text-secondary': 'rgba(255, 255, 255, 0.65)',
-        'text-muted': 'rgba(255, 255, 255, 0.4)',
+        'text-muted': 'rgba(255, 255, 255, 0.5)',
         'text-inverse': '#0a0a0f',
 
         type: {
