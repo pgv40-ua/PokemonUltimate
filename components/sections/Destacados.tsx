@@ -1,6 +1,7 @@
 'use client';
 
 import type { FC } from 'react';
+import { useReducedMotion } from 'framer-motion';
 import { featuredPokemonMock } from '@/lib/mock/featured';
 import { PokemonCard } from '@/components/ui/PokemonCard';
 import type { FeaturedPokemon, PokemonCardData } from '@/lib/types/pokemon';
@@ -27,16 +28,37 @@ function getColSpan(): string {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export const Destacados: FC = () => {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <section
       id="destacados"
       aria-labelledby="destacados-heading"
-      className="relative overflow-hidden py-24 lg:py-32 scroll-snap-start"
+      className="relative isolate overflow-hidden py-24 lg:py-32 scroll-snap-start"
     >
-      {/* Background gradient fallback — featured-bg.mp4 not yet available */}
+      {/* Background: gradient fallback + subtle looping video over it */}
       <div className="absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-[#0a0a0f] to-blue-900/10" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(123,47,190,0.1),transparent)]" />
+        {!shouldReduceMotion && (
+          <video
+            className="absolute inset-0 w-full h-full object-cover opacity-60"
+            src="/assets/featured-bg.mp4"
+            poster="/assets/featured-bg.jpg"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+            style={{
+              WebkitMaskImage:
+                'linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%)',
+              maskImage:
+                'linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%)',
+            }}
+          />
+        )}
       </div>
 
       <div className="container-app">
