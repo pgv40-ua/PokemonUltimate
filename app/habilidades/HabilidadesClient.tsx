@@ -656,7 +656,7 @@ export function HabilidadesClient() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen pt-16">
+      <main id="main-content" className="min-h-screen pt-16">
         <AbilitiesSection />
         <hr className="border-white/[0.06] my-0" />
         <NaturesSection />

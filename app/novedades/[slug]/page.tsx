@@ -45,7 +45,7 @@ export default function NovedadSlugPage({ params }: { params: { slug: string } }
   return (
     <>
       <Navbar />
-      <main className="min-h-screen pt-16">
+      <main id="main-content" className="min-h-screen pt-16">
         <article aria-labelledby="article-heading">
 
           {/* ── Hero gradient ── */}

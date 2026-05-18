@@ -27,15 +27,32 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://pokemonultimate.vercel.app'),
   title: 'PokéDex Ultimate — La enciclopedia Pokémon definitiva',
   description:
     'Stats, evoluciones, habilidades, naturalezas, novedades y meta competitivo. La referencia Pokémon más completa, en un solo lugar.',
+  keywords: ['pokédex', 'pokémon', 'stats', 'evoluciones', 'habilidades', 'meta competitivo', 'tipos', 'naturalezas'],
   openGraph: {
     title: 'PokéDex Ultimate',
     description:
       'La enciclopedia Pokémon más completa del mundo — stats, evoluciones, habilidades y meta competitivo.',
     type: 'website',
     locale: 'es_ES',
+    url: 'https://pokemonultimate.vercel.app',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'PokéDex Ultimate — La enciclopedia Pokémon definitiva',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'PokéDex Ultimate',
+    description: 'La enciclopedia Pokémon más completa del mundo — stats, evoluciones, habilidades y meta competitivo.',
+    images: ['/og-image.png'],
   },
 };
 
@@ -55,6 +72,12 @@ export default function RootLayout({
       className={cn(exo2.variable, dmSans.variable, jetbrains.variable)}
     >
       <body className="font-body bg-bg text-text-primary antialiased">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9998] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-accent-yellow focus:text-black focus:font-display focus:font-bold focus:outline-none"
+        >
+          Saltar al contenido principal
+        </a>
         <LenisProvider>
           <CursorProvider>{children}</CursorProvider>
         </LenisProvider>
