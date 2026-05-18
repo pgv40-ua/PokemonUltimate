@@ -9,9 +9,11 @@ interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 
 const colorClasses: Record<NonNullable<BadgeProps['color']>, string> = {
   neutral: 'bg-surface text-text-secondary border border-border-soft',
-  red:     'bg-accent-red/10 text-accent-red border border-accent-red/30',
+  // #ff5c35 passes 4.5:1 on the darkest glass card glow background (#2b191a)
+  red:     'bg-accent-red/10 text-[#ff5c35] border border-accent-red/30',
   yellow:  'bg-accent-yellow/10 text-accent-yellow border border-accent-yellow/30',
-  purple:  'bg-accent-purple/10 text-accent-purple border border-accent-purple/30',
+  // #c080ff passes 4.5:1 on the darkest purple glow background (#20192b)
+  purple:  'bg-accent-purple/10 text-[#c080ff] border border-accent-purple/30',
   blue:    'bg-accent-blue/10 text-accent-blue border border-accent-blue/30',
 };
 

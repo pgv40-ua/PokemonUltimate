@@ -237,7 +237,7 @@ function TypeChartTable() {
           <div
             className="grid gap-2"
             style={{ gridTemplateColumns: 'repeat(6, 1fr)' }}
-            role="table"
+            role="group"
             aria-label={`Efectividad de ${typeNamesES[mobileAttacker]} como atacante`}
           >
             {TYPE_ORDER.map((defType) => {
@@ -245,7 +245,6 @@ function TypeChartTable() {
               return (
                 <div
                   key={defType}
-                  role="cell"
                   className={[
                     'flex flex-col items-center justify-center gap-1 rounded-lg p-2',
                     cellColors(eff),
@@ -253,10 +252,7 @@ function TypeChartTable() {
                   ].join(' ')}
                   aria-label={ariaLabel(mobileAttacker, defType, eff)}
                 >
-                  <span
-                    className="font-display font-bold text-[9px] uppercase leading-none"
-                    style={{ color: typeHexMap[defType] }}
-                  >
+                  <span className="font-display font-bold text-[9px] uppercase leading-none text-white/90">
                     {TYPE_ABBR[defType]}
                   </span>
                   <span className="font-mono text-[11px] font-medium leading-none">

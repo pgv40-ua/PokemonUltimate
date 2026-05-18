@@ -30,7 +30,7 @@ const particlesOptions: ISourceOptions = {
   background: { color: { value: 'transparent' } },
   fpsLimit: 60,
   particles: {
-    number: { value: 40, density: { enable: true, width: 900, height: 900 } },
+    number: { value: 20, density: { enable: true, width: 900, height: 900 } },
     color: { value: ['#FFD700', '#00BFFF', '#F4D03F'] },
     opacity: {
       value: { min: 0.2, max: 0.6 },
@@ -326,6 +326,7 @@ export const Hero: FC = () => {
         <motion.p
           id="hero-subheadline"
           className="font-body text-text-secondary text-lg lg:text-xl mt-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+          style={{ textShadow: '0 1px 12px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.8)' }}
           variants={itemVariants}
         >
           Más de 1000 Pokémon. Stats completos. Evoluciones, habilidades ocultas,

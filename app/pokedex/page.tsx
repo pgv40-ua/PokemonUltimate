@@ -12,7 +12,7 @@ export default function PokedexPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen pt-16">
+      <main id="main-content" className="min-h-screen pt-16">
         <PokedexExplorer />
       </main>
       <Footer />

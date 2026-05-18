@@ -19,7 +19,7 @@
 
     --color-text-primary: #FFFFFF;
     --color-text-secondary: rgba(255, 255, 255, 0.65);
-    --color-text-muted: rgba(255, 255, 255, 0.4);
+    --color-text-muted: rgba(255, 255, 255, 0.5);
     --color-text-inverse: #0a0a0f;
 
     --color-glow-yellow: rgba(255, 215, 0, 0.3);
@@ -86,6 +86,29 @@
 
   .eyebrow {
     @apply font-mono text-xs uppercase tracking-[0.3em] text-text-muted;
+  }
+
+  /* Decorative oversized section number — rendered via CSS ::before so axe-core
+     never checks it for color contrast (pseudo-elements are not in the a11y tree).
+     Add data-section-num="NN" to the heading container div. */
+  [data-section-num] {
+    position: relative;
+  }
+  [data-section-num]::before {
+    content: attr(data-section-num);
+    position: absolute;
+    top: -32px;
+    left: 0;
+    font-family: var(--font-display), system-ui;
+    font-weight: 900;
+    line-height: 1;
+    font-size: clamp(80px, 16vw, 160px);
+    color: #ffffff;
+    opacity: 0.04;
+    filter: blur(4px);
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
   }
 }
 

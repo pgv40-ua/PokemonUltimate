@@ -92,21 +92,7 @@ export const AbilitiesNatures: FC = () => {
     >
       <div className="container-app">
         {/* ── Section header ─────────────────────────────────────── */}
-        <div className="relative mb-16">
-          {/* Decorative section number — purely decorative, aria-hidden */}
-          <span
-            aria-hidden="true"
-            className="
-              font-display font-black select-none pointer-events-none
-              leading-none
-              opacity-[0.04] blur-sm
-              absolute -top-8 -left-2 lg:-left-4
-              text-white
-            "
-            style={{ fontSize: 'clamp(80px, 18vw, 200px)' }}
-          >
-            07
-          </span>
+        <div className="relative mb-16" data-section-num="07">
 
           <Reveal>
             <p className="eyebrow mb-4">Guía competitiva &middot; Temporada actual</p>

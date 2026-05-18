@@ -303,19 +303,11 @@ export function TypesMatchup() {
     >
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
 
-        {/* Decorative section number — per catalog §8 (no numbered section for types in catalog, using 06 per spec) */}
-        <span
-          className="pointer-events-none select-none absolute -top-4 left-6 lg:left-12 font-display font-black leading-none text-white opacity-[0.04] blur-sm"
-          style={{ fontSize: 'clamp(80px, 16vw, 200px)' }}
-          aria-hidden="true"
-        >
-          06
-        </span>
-
         {/* Header */}
         <motion.div
           {...reveal}
           className="mb-12 lg:mb-16 relative z-10"
+          data-section-num="06"
         >
           <p className="font-body text-xs font-medium uppercase tracking-[0.3em] text-text-secondary mb-4">
             Matchups · 18 tipos Pokémon

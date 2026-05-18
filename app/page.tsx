@@ -13,14 +13,14 @@ import { Footer } from '@/components/sections/Footer';
 // inlined on the landing.
 const HallOfFame = dynamic(
   () => import('@/components/sections/HallOfFame').then((m) => ({ default: m.HallOfFame })),
-  { ssr: false }
+  { ssr: false, loading: () => <div className="h-[600px] bg-surface/30" aria-hidden="true" /> }
 );
 
 export default function HomePage() {
   return (
     <>
       <Navbar />
-      <main>
+      <main id="main-content">
         <Hero />
         <TypeTicker />
         <Novedades />

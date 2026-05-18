@@ -38,7 +38,7 @@ export const heroContent = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.12, delayChildren: 0.3 },
+    transition: { staggerChildren: 0.12, delayChildren: 0 },
   },
 } as const;
 

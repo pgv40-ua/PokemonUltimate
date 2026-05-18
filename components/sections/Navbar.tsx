@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { easing } from '@/lib/motion/tokens';
 import { MagneticLink } from '@/components/ui/MagneticLink';
+import { useFocusTrap } from '@/lib/hooks/useFocusTrap';
 
 const NAV_LINKS = [
   { label: 'Pokédex', href: '/pokedex' },
@@ -78,6 +79,7 @@ export function Navbar() {
 
   const activeMenuVariants = shouldReduceMotion ? reducedMenuVariants : menuVariants;
   const activeLinkVariants = shouldReduceMotion ? reducedLinkVariants : linkVariants;
+  const dialogRef = useFocusTrap(isOpen);
 
   return (
     <>
@@ -171,6 +173,7 @@ export function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            ref={dialogRef as React.RefObject<HTMLDivElement>}
             id="mobile-menu"
             role="dialog"
             aria-modal="true"

@@ -65,25 +65,33 @@ function HofCard({ pokemon, isActive }: HofCardProps) {
 
       {/* Card body */}
       <div className="p-5 text-center">
-        {/* Type badges */}
-        <div className="flex justify-center gap-1.5 mb-3">
-          {pokemon.types.map((t) => (
-            <TypeBadge key={t} type={t} size="sm" />
-          ))}
-        </div>
+        {/* Type badges — only shown on the active center card to avoid
+            contrast issues on dimmed (opacity:0.55) inactive cards */}
+        {isActive && (
+          <div className="flex justify-center gap-1.5 mb-3">
+            {pokemon.types.map((t) => (
+              <TypeBadge key={t} type={t} size="sm" />
+            ))}
+          </div>
+        )}
 
         {/* Name */}
         <h3
-          className="font-display font-black text-white leading-tight"
+          className={cn(
+            'font-display font-black text-white leading-tight',
+            !isActive && 'mt-3',
+          )}
           style={{ fontSize: 'clamp(20px, 4vw, 28px)' }}
         >
           {pokemon.name.es}
         </h3>
 
-        {/* Generation */}
-        <p className="font-mono text-xs text-text-muted mt-1">
-          Gen {pokemon.generation}
-        </p>
+        {/* Generation — only shown on the active card (same contrast reason) */}
+        {isActive && (
+          <p className="font-mono text-xs text-text-muted mt-1">
+            Gen {pokemon.generation}
+          </p>
+        )}
 
         {/* Epic quote */}
         <p className="font-body text-sm text-text-secondary mt-3 italic leading-relaxed">
@@ -225,7 +233,7 @@ export function HallOfFame() {
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="none"
             aria-hidden="true"
             style={{
               WebkitMaskImage:
@@ -241,15 +249,7 @@ export function HallOfFame() {
         {/* ---------------------------------------------------------------- */}
         {/* Header                                                           */}
         {/* ---------------------------------------------------------------- */}
-        <div className="relative mb-16 lg:mb-20">
-          {/* Decorative section number */}
-          <span
-            className="absolute -top-8 left-0 font-display font-black leading-none opacity-[0.04] blur-sm select-none pointer-events-none"
-            style={{ fontSize: 'clamp(80px, 16vw, 160px)' }}
-            aria-hidden="true"
-          >
-            08
-          </span>
+        <div className="relative mb-16 lg:mb-20" data-section-num="08">
 
           <motion.p
             className="eyebrow mb-4"
@@ -366,13 +366,21 @@ export function HallOfFame() {
               aria-label={`Ver ${p.name.es}`}
               onClick={() => setActiveIndex(i)}
               className={cn(
-                'rounded-full transition-all duration-slow ease-smooth',
+                'inline-flex items-center justify-center',
+                'w-[44px] h-[44px] rounded-full',
+                'transition-all duration-slow ease-smooth',
                 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-yellow',
-                i === activeIndex
-                  ? 'w-6 h-2 bg-accent-yellow'
-                  : 'w-2 h-2 bg-white/30 hover:bg-white/50',
               )}
-            />
+            >
+              <span
+                className={cn(
+                  'block rounded-full pointer-events-none transition-all duration-slow ease-smooth',
+                  i === activeIndex
+                    ? 'w-6 h-2 bg-accent-yellow'
+                    : 'w-2 h-2 bg-white/30',
+                )}
+              />
+            </button>
           ))}
         </div>
       </div>

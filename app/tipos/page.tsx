@@ -13,7 +13,7 @@ export default function TiposPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen pt-16">
+      <main id="main-content" className="min-h-screen pt-16">
         <TypesPageClient />
       </main>
       <Footer />

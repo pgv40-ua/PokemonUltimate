@@ -4,6 +4,14 @@ import { typeHexMap, typeNamesES } from '@/lib/utils/typeColors';
 import { TypeIcon } from './TypeIcon';
 import { cn } from '@/lib/utils/cn';
 
+function relativeLuminance(hex: string): number {
+  const r = parseInt(hex.slice(1, 3), 16) / 255;
+  const g = parseInt(hex.slice(3, 5), 16) / 255;
+  const b = parseInt(hex.slice(5, 7), 16) / 255;
+  const lin = (c: number) => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+}
+
 interface TypeBadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   type: PokemonType;
   size?: 'sm' | 'md' | 'lg';
@@ -30,23 +38,27 @@ export function TypeBadge({
   style,
   ...rest
 }: TypeBadgeProps) {
+  const bgHex = typeHexMap[type];
+  // Use dark text when the type background is bright (luminance > 0.18 ≈ contrast < 4.5:1 with white)
+  const textColor = relativeLuminance(bgHex) > 0.18 ? '#1a1a1a' : '#ffffff';
+
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full font-body font-medium text-white',
+        'inline-flex items-center rounded-full font-body font-medium',
         'transition-all duration-base ease-smooth',
         sizeClasses[size],
         className,
       )}
       // CSS variable injection for type color — dynamic, inline style is correct here
-      style={{ backgroundColor: typeHexMap[type], ...style } as React.CSSProperties}
+      style={{ backgroundColor: bgHex, color: textColor, ...style } as React.CSSProperties}
       {...rest}
     >
       {withIcon && (
         <TypeIcon
           type={type}
           size={iconSizes[size]}
-          className="shrink-0 text-white"
+          className="shrink-0"
         />
       )}
       {typeNamesES[type]}

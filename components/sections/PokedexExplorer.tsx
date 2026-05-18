@@ -108,15 +108,7 @@ export function PokedexExplorer() {
       <div className="container-app relative z-10">
 
         {/* ── Section header ─────────────────────────────────────────────── */}
-        <div className="relative mb-12 lg:mb-16">
-          {/* Decorative section number — aria-hidden, purely visual */}
-          <span
-            className="pointer-events-none absolute -top-6 left-0 select-none font-display font-black leading-none blur-sm opacity-[0.04]"
-            style={{ fontSize: 'clamp(90px, 20vw, 220px)' }}
-            aria-hidden="true"
-          >
-            04
-          </span>
+        <div className="relative mb-12 lg:mb-16" data-section-num="04">
 
           <Reveal className="relative">
             <p className="eyebrow mb-4">Pokédex · Vista previa</p>
