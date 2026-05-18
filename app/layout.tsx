@@ -28,7 +28,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://pokemonultimate.vercel.app'),
+  metadataBase: new URL('https://pokemon-ultimate.vercel.app'),
   title: 'PokéDex Ultimate — La enciclopedia Pokémon definitiva',
   description:
     'Stats, evoluciones, habilidades, naturalezas, novedades y meta competitivo. La referencia Pokémon más completa, en un solo lugar.',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
       'La enciclopedia Pokémon más completa del mundo — stats, evoluciones, habilidades y meta competitivo.',
     type: 'website',
     locale: 'es_ES',
-    url: 'https://pokemonultimate.vercel.app',
+    url: 'https://pokemon-ultimate.vercel.app',
     images: [
       {
         url: '/opengraph-image',
