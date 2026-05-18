@@ -9,12 +9,20 @@ function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * t;
 }
 
-export function useMagneticButton(
+/**
+ * Generic magnetic hover effect — applies a smoothed translate to any HTMLElement
+ * when the cursor approaches its bounding box. Used by `<Button magnetic />` and
+ * directly on anchor CTAs (Hero, Navbar pill, FinalCTA).
+ *
+ * Default `strength` is 0.05 to match the existing call sites; pass higher
+ * values (0.2–0.4) for a more pronounced pull.
+ */
+export function useMagneticButton<T extends HTMLElement = HTMLButtonElement>(
   strength = 0.05,
   options: MagneticOptions = {},
-): { ref: MutableRefObject<HTMLButtonElement | null>; style: CSSProperties } {
+): { ref: MutableRefObject<T | null>; style: CSSProperties } {
   const { disableOnReducedMotion = true, disableOnTouch = true } = options;
-  const ref = useRef<HTMLButtonElement>(null);
+  const ref = useRef<T>(null);
   const [style, setStyle] = useState<CSSProperties>({});
 
   useEffect(() => {
@@ -51,8 +59,10 @@ export function useMagneticButton(
       const distX = e.clientX - centerX;
       const distY = e.clientY - centerY;
 
-      // Only apply magnetic effect when cursor is within 2x the element radius
-      const threshold = Math.max(rect.width, rect.height);
+      // Tight activation radius: ~20% of the element's largest dimension
+      // measured from center. The pull only kicks in when the cursor is
+      // essentially over the button.
+      const threshold = Math.max(rect.width, rect.height) * 0.2;
       const distance = Math.sqrt(distX * distX + distY * distY);
 
       if (distance < threshold) {
@@ -90,3 +100,6 @@ export function useMagneticButton(
 
   return { ref, style };
 }
+
+/** Alias — use `useMagnetic` when applying to non-button elements (anchors, divs). */
+export const useMagnetic = useMagneticButton;

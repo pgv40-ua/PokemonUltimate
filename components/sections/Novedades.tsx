@@ -1,33 +1,10 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
 import type { NewsItem, NewsCategory } from '@/lib/types/pokemon';
 import { newsMock } from '@/lib/mock/news';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
-
-// ─── Animation tokens ────────────────────────────────────────────────────────
-
-const easing = [0.22, 1, 0.36, 1] as const;
-
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.08 } },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: easing },
-  },
-};
-
-const itemVariantsReduced = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.3 } },
-};
+import { Reveal } from '@/components/ui/Reveal';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -196,19 +173,12 @@ function SmallCard({ item }: SmallCardProps) {
 // ─── Section ─────────────────────────────────────────────────────────────────
 
 export function Novedades() {
-  const shouldReduceMotion = useReducedMotion();
-
   // Top 6 for the landing: 1 featured + 2 stacked right + 3 bottom row
   const topSix = [...newsMock]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 6);
   const featured = topSix.find((item) => item.featured) ?? topSix[0];
   const secondary = topSix.filter((item) => item.slug !== featured.slug);
-
-  const resolvedItemVariants = shouldReduceMotion ? itemVariantsReduced : itemVariants;
-  const resolvedContainerVariants = shouldReduceMotion
-    ? { hidden: {}, visible: { transition: { staggerChildren: 0 } } }
-    : containerVariants;
 
   return (
     <section
@@ -221,60 +191,59 @@ export function Novedades() {
         <div className="relative mb-12 lg:mb-16">
           <span
             aria-hidden="true"
-            className="absolute -top-6 left-0 font-display font-black text-[120px] lg:text-[160px]
+            className="absolute -top-6 left-0 font-display font-black
                        leading-none opacity-[0.04] blur-sm select-none pointer-events-none
                        text-text-primary"
+            style={{ fontSize: 'clamp(80px, 16vw, 160px)' }}
           >
             01
           </span>
 
-          <p className="eyebrow mb-4 relative z-10">Novedades · Mundo Pokémon</p>
+          <Reveal stagger={0.08}>
+            <p className="eyebrow mb-4 relative z-10">Novedades · Mundo Pokémon</p>
 
-          <h2
-            className="relative z-10 font-display font-black uppercase
-                       text-4xl lg:text-5xl xl:text-6xl leading-none tracking-tight text-text-primary"
-          >
-            Lo último del mundo Pokémon
-          </h2>
+            <h2
+              className="relative z-10 font-display font-black uppercase
+                         text-4xl lg:text-5xl xl:text-6xl leading-none tracking-tight text-text-primary"
+            >
+              Lo último del mundo Pokémon
+            </h2>
+          </Reveal>
         </div>
 
-        {/* ── Row 1: Featured left (2/3) + 2 stacked cards right (1/3) ── */}
-        <motion.div
-          variants={resolvedContainerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
-          className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6"
+        {/* ── Row 1: Featured left (2/3) + 2 stacked cards right (1/3) ──
+            Reveal.Item explicit so the grid sees `lg:col-span-2` on the
+            actual grid item — without it the auto-wrapper swallows the
+            col-span and column 3 stays empty. */}
+        <Reveal
+          stagger={0.08}
+          margin="-80px"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 lg:items-stretch"
         >
-          {/* Featured — left 2 columns */}
-          <motion.div variants={resolvedItemVariants} className="lg:col-span-2">
+          <Reveal.Item className="lg:col-span-2 lg:h-full">
             <FeaturedCard item={featured} />
-          </motion.div>
+          </Reveal.Item>
 
-          {/* Right column — 2 small cards stacked, fills the same height as featured */}
-          <motion.div
-            variants={resolvedItemVariants}
-            className="flex flex-col gap-6"
-          >
-            <SmallCard item={secondary[0]} />
-            <SmallCard item={secondary[1]} />
-          </motion.div>
-        </motion.div>
+          <Reveal.Item className="flex flex-col gap-6 lg:h-full">
+            <div className="flex-1 min-h-0">
+              <SmallCard item={secondary[0]} />
+            </div>
+            <div className="flex-1 min-h-0">
+              <SmallCard item={secondary[1]} />
+            </div>
+          </Reveal.Item>
+        </Reveal>
 
         {/* ── Row 2: 3 equal cards — 3 columns, zero empty cells ── */}
-        <motion.div
-          variants={resolvedContainerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-40px' }}
+        <Reveal
+          stagger={0.08}
+          margin="-40px"
           className="grid grid-cols-1 md:grid-cols-3 gap-6"
         >
           {secondary.slice(2).map((item) => (
-            <motion.div key={item.slug} variants={resolvedItemVariants}>
-              <SmallCard item={item} />
-            </motion.div>
+            <SmallCard key={item.slug} item={item} />
           ))}
-        </motion.div>
+        </Reveal>
 
         {/* ── CTA to full novedades page ── */}
         <div className="mt-10 flex justify-center">

@@ -226,9 +226,9 @@ function MobileView() {
         </span>
       </div>
 
-      {/* 6-column grid of 18 defender cells */}
+      {/* 6-column grid of 18 defender cells (3 cols on phones, 6 on sm+) */}
       <div
-        className="grid grid-cols-6 gap-2"
+        className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 sm:gap-2"
         role="list"
         aria-label={`Efectividad de ${typeNamesES[selectedType]} contra cada tipo`}
       >
@@ -246,7 +246,7 @@ function MobileView() {
               aria-label={`vs ${typeNamesES[defType]}: ×${eff}`}
             >
               <span
-                className="font-mono text-[8px] font-bold uppercase leading-none"
+                className="font-mono text-[10px] sm:text-[8px] font-bold uppercase leading-none"
                 style={{ color: typeHexMap[defType] }}
               >
                 {TYPE_ABBR[defType]}
@@ -301,11 +301,12 @@ export function TypesMatchup() {
       className="relative py-24 lg:py-32 overflow-hidden"
       aria-labelledby={headingId}
     >
-      <div className="container mx-auto max-w-7xl px-6 lg:px-12">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
 
         {/* Decorative section number — per catalog §8 (no numbered section for types in catalog, using 06 per spec) */}
         <span
-          className="pointer-events-none select-none absolute -top-4 left-6 lg:left-12 font-display font-black text-[clamp(6rem,20vw,16rem)] leading-none text-white opacity-[0.04] blur-sm"
+          className="pointer-events-none select-none absolute -top-4 left-6 lg:left-12 font-display font-black leading-none text-white opacity-[0.04] blur-sm"
+          style={{ fontSize: 'clamp(80px, 16vw, 200px)' }}
           aria-hidden="true"
         >
           06

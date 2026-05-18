@@ -10,6 +10,7 @@ import { typeHexMap, typeNamesES } from '@/lib/utils/typeColors';
 import { useMotionSafe } from '@/lib/hooks/useMotionSafe';
 import { cn } from '@/lib/utils/cn';
 import { easing } from '@/lib/motion/tokens';
+import { Reveal } from '@/components/ui/Reveal';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -58,7 +59,7 @@ export function PokedexExplorer() {
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => setQuery(e.target.value), 150);
   };
-  const { reduced, reveal } = useMotionSafe();
+  const { reduced } = useMotionSafe();
 
   const filtered = useMemo(() => {
     return pokemonMock
@@ -110,13 +111,14 @@ export function PokedexExplorer() {
         <div className="relative mb-12 lg:mb-16">
           {/* Decorative section number — aria-hidden, purely visual */}
           <span
-            className="pointer-events-none absolute -top-6 left-0 select-none font-display font-black text-[160px] lg:text-[220px] leading-none blur-sm opacity-[0.04]"
+            className="pointer-events-none absolute -top-6 left-0 select-none font-display font-black leading-none blur-sm opacity-[0.04]"
+            style={{ fontSize: 'clamp(90px, 20vw, 220px)' }}
             aria-hidden="true"
           >
             04
           </span>
 
-          <motion.div {...reveal} className="relative">
+          <Reveal className="relative">
             <p className="eyebrow mb-4">Pokédex · Vista previa</p>
             <h2
               id="pokedex-heading"
@@ -129,14 +131,11 @@ export function PokedexExplorer() {
               Más de 1000 Pokémon. Busca, filtra y descubre. Aquí tienes{' '}
               {pokemonMock.length} para empezar.
             </p>
-          </motion.div>
+          </Reveal>
         </div>
 
         {/* ── Search bar ─────────────────────────────────────────────────── */}
-        <motion.div
-          {...reveal}
-          className="max-w-2xl mx-auto mb-8"
-        >
+        <Reveal className="max-w-2xl mx-auto mb-8">
           <Input
             type="search"
             iconLeft={<SearchIcon />}
@@ -146,10 +145,10 @@ export function PokedexExplorer() {
             aria-label="Buscar Pokémon por nombre, número o tipo"
             className="text-lg"
           />
-        </motion.div>
+        </Reveal>
 
         {/* ── Type filter pills ───────────────────────────────────────────── */}
-        <motion.div {...reveal}>
+        <Reveal>
           <div
             className="flex flex-wrap gap-2 justify-center"
             role="group"
@@ -195,7 +194,7 @@ export function PokedexExplorer() {
               </button>
             </div>
           )}
-        </motion.div>
+        </Reveal>
 
         {/* ── Results counter + grid ──────────────────────────────────────── */}
         <div className="mt-10">
@@ -269,7 +268,7 @@ export function PokedexExplorer() {
         </div>
 
         {/* ── CTA ────────────────────────────────────────────────────────── */}
-        <motion.div {...reveal} className="text-center mt-16">
+        <Reveal className="text-center mt-16">
           <a
             href="/pokedex"
             className={cn(
@@ -299,7 +298,7 @@ export function PokedexExplorer() {
           <p className="text-text-muted text-sm mt-3 font-body">
             Integración completa con PokéAPI próximamente
           </p>
-        </motion.div>
+        </Reveal>
       </div>
     </section>
   );

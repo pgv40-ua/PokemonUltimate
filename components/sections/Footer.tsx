@@ -1,4 +1,7 @@
+'use client';
+
 import type { FC } from 'react';
+import { Reveal } from '@/components/ui/Reveal';
 
 const NAV_COLUMNS = [
   {
@@ -118,10 +121,10 @@ export const Footer: FC = () => {
       role="contentinfo"
       className="bg-bg-elevated border-t border-white/10 pt-16 pb-8"
     >
-      <div className="container mx-auto max-w-7xl px-6 lg:px-12">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
 
         {/* Top area: logo + nav columns */}
-        <div className="flex flex-col gap-12 lg:flex-row lg:gap-16">
+        <Reveal margin="-40px" className="flex flex-col gap-10 sm:gap-12 lg:flex-row lg:gap-16">
 
           {/* Logo + tagline */}
           <div className="shrink-0 lg:w-64">
@@ -135,7 +138,7 @@ export const Footer: FC = () => {
           </div>
 
           {/* Nav columns */}
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-4 flex-1">
+          <div className="grid grid-cols-2 gap-6 sm:gap-8 md:grid-cols-4 flex-1">
             {NAV_COLUMNS.map(({ label, links }) => (
               <nav key={label} aria-label={label}>
                 <p className={COLUMN_HEADING_CLASSES}>{label}</p>
@@ -151,7 +154,7 @@ export const Footer: FC = () => {
               </nav>
             ))}
           </div>
-        </div>
+        </Reveal>
 
         {/* Bottom area: separator + disclaimer + copyright */}
         <div className="mt-12 pt-8 border-t border-white/5">

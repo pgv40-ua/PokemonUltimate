@@ -1,4 +1,8 @@
+'use client';
+
 import type { FC } from 'react';
+import { MagneticLink } from '@/components/ui/MagneticLink';
+import { Reveal } from '@/components/ui/Reveal';
 
 export const FinalCTA: FC = () => {
   return (
@@ -46,7 +50,11 @@ export const FinalCTA: FC = () => {
       </svg>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto max-w-7xl px-6 lg:px-12 flex flex-col items-center text-center">
+      <Reveal
+        variant="fade-up"
+        stagger={0.12}
+        className="relative z-10 container mx-auto max-w-7xl px-6 lg:px-12 flex flex-col items-center text-center"
+      >
         <h2
           id="final-cta-heading"
           className="font-display font-black text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-bg leading-none tracking-tight max-w-4xl"
@@ -58,22 +66,23 @@ export const FinalCTA: FC = () => {
           Accede a la Pokédex más completa. Gratis. Para siempre.
         </p>
 
-        <a
+        <MagneticLink
           href="#pokedex"
+          strength={0.35}
           className="
             mt-10 inline-flex items-center justify-center
             rounded-full font-body font-bold
             px-10 py-4 text-lg
             bg-bg text-accent-yellow
-            transition-all duration-base ease-smooth
+            transition-[background-color,color] duration-base ease-smooth
             hover:bg-accent-yellow hover:text-bg
             focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-bg focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFA500]
             select-none
           "
         >
           Empezar ahora&nbsp;→
-        </a>
-      </div>
+        </MagneticLink>
+      </Reveal>
     </section>
   );
 };
