@@ -124,14 +124,7 @@ export function Evolutions() {
     >
       <div className="container-app">
         {/* ── Section header ─────────────────────────────────────────────── */}
-        <div className="relative mb-12 lg:mb-16">
-          <span
-            className="absolute -top-6 left-0 font-display font-black leading-none select-none pointer-events-none blur-sm text-white opacity-[0.04]"
-            style={{ fontSize: 'clamp(80px, 16vw, 160px)' }}
-            aria-hidden="true"
-          >
-            05
-          </span>
+        <div className="relative mb-12 lg:mb-16" data-section-num="05">
 
           <p className="eyebrow mb-4 relative">Cadenas de evolución · Gen I</p>
           <h2

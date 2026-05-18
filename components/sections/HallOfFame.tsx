@@ -65,25 +65,33 @@ function HofCard({ pokemon, isActive }: HofCardProps) {
 
       {/* Card body */}
       <div className="p-5 text-center">
-        {/* Type badges */}
-        <div className="flex justify-center gap-1.5 mb-3">
-          {pokemon.types.map((t) => (
-            <TypeBadge key={t} type={t} size="sm" />
-          ))}
-        </div>
+        {/* Type badges — only shown on the active center card to avoid
+            contrast issues on dimmed (opacity:0.55) inactive cards */}
+        {isActive && (
+          <div className="flex justify-center gap-1.5 mb-3">
+            {pokemon.types.map((t) => (
+              <TypeBadge key={t} type={t} size="sm" />
+            ))}
+          </div>
+        )}
 
         {/* Name */}
         <h3
-          className="font-display font-black text-white leading-tight"
+          className={cn(
+            'font-display font-black text-white leading-tight',
+            !isActive && 'mt-3',
+          )}
           style={{ fontSize: 'clamp(20px, 4vw, 28px)' }}
         >
           {pokemon.name.es}
         </h3>
 
-        {/* Generation */}
-        <p className="font-mono text-xs text-text-muted mt-1">
-          Gen {pokemon.generation}
-        </p>
+        {/* Generation — only shown on the active card (same contrast reason) */}
+        {isActive && (
+          <p className="font-mono text-xs text-text-muted mt-1">
+            Gen {pokemon.generation}
+          </p>
+        )}
 
         {/* Epic quote */}
         <p className="font-body text-sm text-text-secondary mt-3 italic leading-relaxed">
@@ -241,15 +249,7 @@ export function HallOfFame() {
         {/* ---------------------------------------------------------------- */}
         {/* Header                                                           */}
         {/* ---------------------------------------------------------------- */}
-        <div className="relative mb-16 lg:mb-20">
-          {/* Decorative section number */}
-          <span
-            className="absolute -top-8 left-0 font-display font-black leading-none opacity-[0.04] blur-sm select-none pointer-events-none"
-            style={{ fontSize: 'clamp(80px, 16vw, 160px)' }}
-            aria-hidden="true"
-          >
-            08
-          </span>
+        <div className="relative mb-16 lg:mb-20" data-section-num="08">
 
           <motion.p
             className="eyebrow mb-4"

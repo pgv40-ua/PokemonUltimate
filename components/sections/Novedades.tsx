@@ -188,16 +188,7 @@ export function Novedades() {
     >
       <div className="container-app">
         {/* ── Section header ── */}
-        <div className="relative mb-12 lg:mb-16">
-          <span
-            aria-hidden="true"
-            className="absolute -top-6 left-0 font-display font-black
-                       leading-none opacity-[0.04] blur-sm select-none pointer-events-none
-                       text-text-primary"
-            style={{ fontSize: 'clamp(80px, 16vw, 160px)' }}
-          >
-            01
-          </span>
+        <div className="relative mb-12 lg:mb-16" data-section-num="01">
 
           <Reveal stagger={0.08}>
             <p className="eyebrow mb-4 relative z-10">Novedades · Mundo Pokémon</p>

@@ -63,14 +63,7 @@ export const Destacados: FC = () => {
 
       <div className="container-app">
         {/* ── Section header ───────────────────────────────────────────── */}
-        <div className="relative mb-12 lg:mb-16">
-          <span
-            aria-hidden="true"
-            className="pointer-events-none select-none absolute -top-8 left-0 font-display font-black leading-none opacity-[0.04] blur-sm text-white"
-            style={{ fontSize: 'clamp(80px, 16vw, 160px)' }}
-          >
-            02
-          </span>
+        <div className="relative mb-12 lg:mb-16" data-section-num="02">
 
           <Reveal margin="-60px">
             <p className="eyebrow mb-4 text-accent-blue">
