@@ -1,7 +1,7 @@
 'use client';
 
 import { useReducedMotion } from 'framer-motion';
-import { duration, easing, viewport } from '@/lib/utils/motion';
+import { duration, easing, viewport } from '@/lib/motion/tokens';
 
 export function useMotionSafe() {
   const reduced = useReducedMotion();
