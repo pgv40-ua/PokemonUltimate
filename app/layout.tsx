@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Exo_2, DM_Sans, JetBrains_Mono } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/react';
 import { LenisProvider } from '@/components/providers/LenisProvider';
 import { CursorProvider } from '@/components/providers/CursorProvider';
 import { cn } from '@/lib/utils/cn';
@@ -27,7 +28,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://pokemonultimate.vercel.app'),
+  metadataBase: new URL('https://pokemon-ultimate.vercel.app'),
   title: 'PokéDex Ultimate — La enciclopedia Pokémon definitiva',
   description:
     'Stats, evoluciones, habilidades, naturalezas, novedades y meta competitivo. La referencia Pokémon más completa, en un solo lugar.',
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
       'La enciclopedia Pokémon más completa del mundo — stats, evoluciones, habilidades y meta competitivo.',
     type: 'website',
     locale: 'es_ES',
-    url: 'https://pokemonultimate.vercel.app',
+    url: 'https://pokemon-ultimate.vercel.app',
     images: [
       {
         url: '/opengraph-image',
@@ -81,6 +82,7 @@ export default function RootLayout({
         <LenisProvider>
           <CursorProvider>{children}</CursorProvider>
         </LenisProvider>
+        <Analytics />
       </body>
     </html>
   );

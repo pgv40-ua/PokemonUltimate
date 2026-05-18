@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-const BASE_URL = 'https://pokemonultimate.vercel.app';
+const BASE_URL = 'https://pokemon-ultimate.vercel.app';
 
 const NEWS_SLUGS = [
   'legends-za-nuevos-pokemon-confirmados',
