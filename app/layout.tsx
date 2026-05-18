@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Exo_2, DM_Sans, JetBrains_Mono } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/react';
 import { LenisProvider } from '@/components/providers/LenisProvider';
 import { CursorProvider } from '@/components/providers/CursorProvider';
 import { cn } from '@/lib/utils/cn';
@@ -81,6 +82,7 @@ export default function RootLayout({
         <LenisProvider>
           <CursorProvider>{children}</CursorProvider>
         </LenisProvider>
+        <Analytics />
       </body>
     </html>
   );
