@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     url: 'https://pokemonultimate.vercel.app',
     images: [
       {
-        url: '/og-image.png',
+        url: '/opengraph-image',
         width: 1200,
         height: 630,
         alt: 'PokéDex Ultimate — La enciclopedia Pokémon definitiva',
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'PokéDex Ultimate',
     description: 'La enciclopedia Pokémon más completa del mundo — stats, evoluciones, habilidades y meta competitivo.',
-    images: ['/og-image.png'],
+    images: ['/opengraph-image'],
   },
 };
 
