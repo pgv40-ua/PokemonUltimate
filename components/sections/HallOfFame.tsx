@@ -233,7 +233,7 @@ export function HallOfFame() {
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="none"
             aria-hidden="true"
             style={{
               WebkitMaskImage:
@@ -366,13 +366,21 @@ export function HallOfFame() {
               aria-label={`Ver ${p.name.es}`}
               onClick={() => setActiveIndex(i)}
               className={cn(
-                'rounded-full transition-all duration-slow ease-smooth',
+                'inline-flex items-center justify-center',
+                'w-[44px] h-[44px] rounded-full',
+                'transition-all duration-slow ease-smooth',
                 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-yellow',
-                i === activeIndex
-                  ? 'w-6 h-2 bg-accent-yellow'
-                  : 'w-2 h-2 bg-white/30 hover:bg-white/50',
               )}
-            />
+            >
+              <span
+                className={cn(
+                  'block rounded-full pointer-events-none transition-all duration-slow ease-smooth',
+                  i === activeIndex
+                    ? 'w-6 h-2 bg-accent-yellow'
+                    : 'w-2 h-2 bg-white/30',
+                )}
+              />
+            </button>
           ))}
         </div>
       </div>

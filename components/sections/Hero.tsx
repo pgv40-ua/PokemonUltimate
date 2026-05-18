@@ -30,7 +30,7 @@ const particlesOptions: ISourceOptions = {
   background: { color: { value: 'transparent' } },
   fpsLimit: 60,
   particles: {
-    number: { value: 40, density: { enable: true, width: 900, height: 900 } },
+    number: { value: 20, density: { enable: true, width: 900, height: 900 } },
     color: { value: ['#FFD700', '#00BFFF', '#F4D03F'] },
     opacity: {
       value: { min: 0.2, max: 0.6 },
