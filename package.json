@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@sentry/nextjs": "^10.53.1",
     "@studio-freight/lenis": "^1.0.42",
     "@tsparticles/engine": "^3.7.1",
     "@tsparticles/react": "^3.0.0",
