@@ -132,9 +132,10 @@ export const Hero: FC = () => {
       aria-labelledby="hero-heading"
       className="relative min-h-[100svh] overflow-hidden flex items-center justify-center snap-start pt-20 sm:pt-16"
     >
-      {/* ── Layer z-0: deep background — Zekrom video stand-in ──
+      {/* ── Layer z-0: deep background — Zekrom video over radial gradient ──
           Drifts slowest of all layers (mid intensity). Subtle scale gives
-          breathing depth without pixel rounding. */}
+          breathing depth without pixel rounding. The radial gradient remains
+          beneath the video so it covers any reduced-motion or load failure. */}
       <motion.div
         className="absolute inset-0 z-0"
         aria-hidden="true"
@@ -142,12 +143,31 @@ export const Hero: FC = () => {
         style={{ y: bgLayer.y, scale: bgLayer.scale }}
       >
         <div
-          className="w-full h-full"
+          className="absolute inset-0 w-full h-full"
           style={{
             background:
               'radial-gradient(ellipse 80% 60% at 60% 40%, #001B4D 0%, #001030 40%, #0a0a0f 100%)',
           }}
         />
+        {!shouldReduceMotion && (
+          <video
+            className="absolute inset-0 w-full h-full object-cover opacity-90 mix-blend-screen"
+            src="/assets/hero-zekrom.mp4"
+            poster="/assets/hero-zekrom.jpg"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+            style={{
+              WebkitMaskImage:
+                'linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%)',
+              maskImage:
+                'linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%)',
+            }}
+          />
+        )}
       </motion.div>
 
       {/* ── Layer z-10: vignette overlay — drifts faster than the bg and

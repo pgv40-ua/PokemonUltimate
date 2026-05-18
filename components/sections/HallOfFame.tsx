@@ -209,13 +209,32 @@ export function HallOfFame() {
   return (
     <section
       id="hall-of-fame"
-      className="relative py-24 lg:py-32 overflow-hidden"
+      className="relative isolate py-24 lg:py-32 overflow-hidden"
       aria-label="Hall of Fame — Los inmortales"
     >
-      {/* Section background */}
-      <div className="absolute inset-0 -z-10" aria-hidden="true">
+      {/* Section background — gradient base + decorative particle video on top */}
+      <div className="absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
         <div className="absolute inset-0 bg-gradient-to-b from-bg via-bg to-bg-elevated/50" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_60%,rgba(255,215,0,0.06),transparent)]" />
+        {!shouldReduceMotion && (
+          <video
+            className="absolute inset-0 w-full h-full object-cover opacity-60 pointer-events-none"
+            src="/assets/halloffame-particles.mp4"
+            poster="/assets/halloffame-particles.jpg"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+            style={{
+              WebkitMaskImage:
+                'linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%)',
+              maskImage:
+                'linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%)',
+            }}
+          />
+        )}
       </div>
 
       <div className="container-app">
