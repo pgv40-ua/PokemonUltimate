@@ -54,6 +54,7 @@ export function PokemonCard({
         {
           '--glow-color': glowColor,
           '--type-color': typeColor,
+          borderColor: `${typeColor}60`,
         } as React.CSSProperties
       }
       onClick={isInteractive ? onClick : undefined}
@@ -73,7 +74,7 @@ export function PokemonCard({
             fill
             className="object-contain p-2"
             priority={priority}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 16vw"
           />
         ) : (
           // Gradient fallback — uses type color via CSS variable
