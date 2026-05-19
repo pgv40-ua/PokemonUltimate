@@ -296,77 +296,80 @@ export const Hero: FC = () => {
         </svg>
       </motion.div>
 
-      {/* ── Layer z-40: main content — staggered fade-in on mount ──
-          motion.div acts as the orchestrating parent; children inherit
-          the stagger via `variants`. Each child uses itemVariants. */}
-      <motion.div
+      {/* ── Layer z-40: main content ──
+          h1 is a plain element (no Framer wrapping) so the browser paints it
+          at SSR-render time and records LCP before any JS runs. Subtitle and
+          CTAs stagger in after hydration as progressive enhancement. */}
+      <div
         className="relative z-40 w-full max-w-5xl mx-auto px-6 lg:px-8 text-center lg:text-left"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
       >
-        {/* H1 principal */}
-        <motion.h1
+        {/* H1 principal — plain element, no opacity:0 in SSR, LCP-safe */}
+        <h1
           id="hero-heading"
           className="font-display font-black leading-[0.92] text-white"
           style={{
             fontSize: 'clamp(48px, 9vw, 120px)',
             textShadow: '0 0 40px rgba(0, 191, 255, 0.25)',
           }}
-          variants={itemVariants}
         >
           El poder de todos{' '}
           <br className="hidden lg:block" />
           los Pokémon,
           <br />
           <span className="text-accent-blue">en tus manos.</span>
-        </motion.h1>
+        </h1>
 
-        {/* Subheadline */}
-        <motion.p
-          id="hero-subheadline"
-          className="font-body text-text-secondary text-lg lg:text-xl mt-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
-          style={{ textShadow: '0 1px 12px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.8)' }}
-          variants={itemVariants}
-        >
-          Más de 1000 Pokémon. Stats completos. Evoluciones, habilidades ocultas,
-          naturalezas y el meta competitivo más actualizado.
-        </motion.p>
-
-        {/* CTAs */}
         <motion.div
-          className="flex flex-col sm:flex-row gap-4 mt-10 justify-center lg:justify-start"
-          variants={itemVariants}
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
         >
-          {/* CTA primario — amarillo, magnético */}
-          <MagneticLink
-            href="#pokédex"
-            className="inline-flex items-center justify-center gap-2 bg-accent-yellow text-bg font-display font-bold px-8 py-4 rounded-full text-base hover:bg-white hover:shadow-glow-yellow transition-[background-color,box-shadow,color] duration-base ease-smooth focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          {/* Subheadline */}
+          <motion.p
+            id="hero-subheadline"
+            className="font-body text-text-secondary text-lg lg:text-xl mt-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+            style={{ textShadow: '0 1px 12px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.8)' }}
+            variants={itemVariants}
           >
-            Explorar la Pokédex
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              aria-hidden="true"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </MagneticLink>
+            Más de 1000 Pokémon. Stats completos. Evoluciones, habilidades ocultas,
+            naturalezas y el meta competitivo más actualizado.
+          </motion.p>
 
-          {/* CTA secundario — outline blanco, magnético */}
-          <MagneticLink
-            href="#novedades"
-            strength={0.2}
-            className="inline-flex items-center justify-center gap-2 border border-white/30 text-white font-display font-medium px-8 py-4 rounded-full text-base hover:bg-white/10 hover:border-white/60 transition-[background-color,border-color] duration-base ease-smooth focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          {/* CTAs */}
+          <motion.div
+            className="flex flex-col sm:flex-row gap-4 mt-10 justify-center lg:justify-start"
+            variants={itemVariants}
           >
-            Ver novedades →
-          </MagneticLink>
+            {/* CTA primario — amarillo, magnético */}
+            <MagneticLink
+              href="#pokédex"
+              className="inline-flex items-center justify-center gap-2 bg-accent-yellow text-bg font-display font-bold px-8 py-4 rounded-full text-base hover:bg-white hover:shadow-glow-yellow transition-[background-color,box-shadow,color] duration-base ease-smooth focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              Explorar la Pokédex
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                aria-hidden="true"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </MagneticLink>
+
+            {/* CTA secundario — outline blanco, magnético */}
+            <MagneticLink
+              href="#novedades"
+              strength={0.2}
+              className="inline-flex items-center justify-center gap-2 border border-white/30 text-white font-display font-medium px-8 py-4 rounded-full text-base hover:bg-white/10 hover:border-white/60 transition-[background-color,border-color] duration-base ease-smooth focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              Ver novedades →
+            </MagneticLink>
+          </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
 
       {/* ── Badge glassmorphism flotante — Zekrom (inferior izquierda) ──
           Extra delay so it lands after the main content stagger completes.
