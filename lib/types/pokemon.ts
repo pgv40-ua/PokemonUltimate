@@ -68,6 +68,10 @@ export interface EvolutionMethod {
   trigger: EvolutionTrigger;
   minLevel?: number;
   item?: string;
+  location?: string;
+  timeOfDay?: 'day' | 'night' | '';
+  knownMoveType?: PokemonType;
+  minAffection?: number;
   condition?: string;
 }
 
@@ -80,6 +84,18 @@ export interface EvolutionStage {
 export interface EvolutionChain {
   id: number;
   stages: EvolutionStage[];
+}
+
+export interface EvolutionStageRich extends EvolutionStage {
+  nameEs: string;
+  types: [PokemonType] | [PokemonType, PokemonType];
+  primaryType: PokemonType;
+  spriteUrl: string;
+}
+
+export interface EvolutionChainRich {
+  id: number;
+  stages: EvolutionStageRich[];
 }
 
 export interface PokemonRef {
@@ -131,6 +147,42 @@ export interface PokemonCardData {
 export interface TypeMatchupRow {
   attacker: PokemonType;
   effectiveness: Record<PokemonType, Effectiveness>;
+}
+
+export type MoveLearnMethod = 'level-up' | 'machine' | 'egg' | 'tutor';
+
+export interface MoveDetail {
+  slug: string;
+  nameEs: string;
+  nameEn: string;
+  type: PokemonType;
+  category: MoveCategory;
+  power: number | null;
+  accuracy: number | null;
+  pp: number;
+  learnMethod: MoveLearnMethod;
+  learnLevel?: number;
+}
+
+export interface EncounterByGame {
+  game: string;
+  locationsEs: string[];
+}
+
+export interface BestNaturePick {
+  nature: Nature;
+  reason: string;
+}
+
+export interface PokemonCore extends Pokemon {
+  artworkUrl: string;
+  weaknesses: Record<PokemonType, Effectiveness>;
+  evolutionChain: EvolutionChainRich;
+}
+
+export interface PokemonFull extends PokemonCore {
+  moves: MoveDetail[];
+  encounters: EncounterByGame[];
 }
 
 export interface NewsItem {
