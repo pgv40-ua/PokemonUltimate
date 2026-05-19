@@ -19,6 +19,15 @@ const HallOfFame = dynamic(
 export default function HomePage() {
   return (
     <>
+      {/* Preload hero poster so the browser fetches it in parallel with HTML parsing.
+          Without this, Chrome discovers the image only when it parses the <video poster>
+          inside the Hero component, delaying LCP by ~2-3 s on slow connections. */}
+      <link
+        rel="preload"
+        as="image"
+        href="/assets/hero-zekrom.jpg"
+        fetchPriority="high"
+      />
       <Navbar />
       <main id="main-content">
         <Hero />
