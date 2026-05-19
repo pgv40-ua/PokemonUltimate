@@ -1,18 +1,16 @@
 'use client';
 
 import { useState, useMemo, useRef } from 'react';
+import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
-import { pokemonMock } from '@/lib/mock/pokemon';
 import { PokemonCard } from '@/components/ui/PokemonCard';
 import { Input } from '@/components/ui/Input';
-import type { PokemonCardData, PokemonType } from '@/lib/types/pokemon';
+import type { Pokemon, PokemonCardData, PokemonType } from '@/lib/types/pokemon';
 import { typeHexMap, typeNamesES } from '@/lib/utils/typeColors';
 import { useMotionSafe } from '@/lib/hooks/useMotionSafe';
 import { cn } from '@/lib/utils/cn';
 import { easing } from '@/lib/motion/tokens';
 import { Reveal } from '@/components/ui/Reveal';
-
-// ─── Constants ───────────────────────────────────────────────────────────────
 
 const TYPE_ORDER: PokemonType[] = [
   'normal', 'fire', 'water', 'electric', 'grass', 'ice',
@@ -20,14 +18,14 @@ const TYPE_ORDER: PokemonType[] = [
   'rock', 'ghost', 'dragon', 'dark', 'steel', 'fairy',
 ];
 
-const toCardData = (p: (typeof pokemonMock)[number]): PokemonCardData => ({
+const PAGE_SIZE = 48;
+
+const toCardData = (p: Pokemon): PokemonCardData => ({
   id: p.id,
   name: p.name.es,
   types: p.types,
   sprite: p.imageUrl,
 });
-
-// ─── Sub-components ──────────────────────────────────────────────────────────
 
 const SearchIcon = () => (
   <svg
@@ -46,47 +44,59 @@ const SearchIcon = () => (
   </svg>
 );
 
-// ─── Main Component ──────────────────────────────────────────────────────────
+interface PokedexExplorerProps {
+  pokemon: Pokemon[];
+}
 
-export function PokedexExplorer() {
+export function PokedexExplorer({ pokemon }: PokedexExplorerProps) {
   const [inputValue, setInputValue] = useState('');
   const [query, setQuery] = useState('');
   const [selectedType, setSelectedType] = useState<PokemonType | null>(null);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
     clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => setQuery(e.target.value), 150);
+    debounceRef.current = setTimeout(() => {
+      setQuery(e.target.value);
+      setVisibleCount(PAGE_SIZE);
+    }, 150);
   };
   const { reduced } = useMotionSafe();
 
   const filtered = useMemo(() => {
-    return pokemonMock
-      .filter((p) => {
-        const q = query.trim().toLowerCase();
-        const matchesQuery =
-          q === '' ||
-          p.name.es.toLowerCase().includes(q) ||
-          p.name.en.toLowerCase().includes(q) ||
-          String(p.id).includes(q);
-        const matchesType =
-          selectedType === null || p.types.includes(selectedType);
-        return matchesQuery && matchesType;
-      })
-      .slice(0, 12);
-  }, [query, selectedType]);
+    const q = query.trim().toLowerCase();
+    return pokemon.filter((p) => {
+      const matchesQuery =
+        q === '' ||
+        p.name.es.toLowerCase().includes(q) ||
+        p.name.en.toLowerCase().includes(q) ||
+        String(p.id).includes(q);
+      const matchesType =
+        selectedType === null || p.types.includes(selectedType);
+      return matchesQuery && matchesType;
+    });
+  }, [pokemon, query, selectedType]);
 
+  const visible = useMemo(
+    () => filtered.slice(0, visibleCount),
+    [filtered, visibleCount],
+  );
+
+  const hasMore = visibleCount < filtered.length;
   const hasActiveFilters = selectedType !== null || query.trim() !== '';
 
   const handleClearFilters = () => {
     setInputValue('');
     setQuery('');
     setSelectedType(null);
+    setVisibleCount(PAGE_SIZE);
   };
 
   const handleTypeToggle = (type: PokemonType) => {
     setSelectedType((prev) => (prev === type ? null : type));
+    setVisibleCount(PAGE_SIZE);
   };
 
   return (
@@ -95,7 +105,6 @@ export function PokedexExplorer() {
       className="relative py-24 lg:py-32 overflow-hidden"
       aria-labelledby="pokedex-heading"
     >
-      {/* Subtle radial background glow — decorative */}
       <div
         className="pointer-events-none absolute inset-0 z-0"
         aria-hidden="true"
@@ -106,12 +115,9 @@ export function PokedexExplorer() {
       />
 
       <div className="container-app relative z-10">
-
-        {/* ── Section header ─────────────────────────────────────────────── */}
         <div className="relative mb-12 lg:mb-16" data-section-num="04">
-
           <Reveal className="relative">
-            <p className="eyebrow mb-4">Pokédex · Vista previa</p>
+            <p className="eyebrow mb-4">Pokédex · Kanto · Johto · Hoenn</p>
             <h2
               id="pokedex-heading"
               className="font-display font-black uppercase text-text-primary leading-none"
@@ -120,13 +126,12 @@ export function PokedexExplorer() {
               Explora la Pokédex completa
             </h2>
             <p className="mt-4 font-body text-text-secondary text-base lg:text-lg max-w-2xl">
-              Más de 1000 Pokémon. Busca, filtra y descubre. Aquí tienes{' '}
-              {pokemonMock.length} para empezar.
+              {pokemon.length} Pokémon reales con datos oficiales de PokéAPI.
+              Busca, filtra y abre cada ficha para ver stats, debilidades, evoluciones y movimientos.
             </p>
           </Reveal>
         </div>
 
-        {/* ── Search bar ─────────────────────────────────────────────────── */}
         <Reveal className="max-w-2xl mx-auto mb-8">
           <Input
             type="search"
@@ -139,7 +144,6 @@ export function PokedexExplorer() {
           />
         </Reveal>
 
-        {/* ── Type filter pills ───────────────────────────────────────────── */}
         <Reveal>
           <div
             className="flex flex-wrap gap-2 justify-center"
@@ -174,7 +178,6 @@ export function PokedexExplorer() {
             })}
           </div>
 
-          {/* Clear filters link — only visible when a filter is active */}
           {hasActiveFilters && (
             <div className="flex justify-center mt-4">
               <button
@@ -188,32 +191,34 @@ export function PokedexExplorer() {
           )}
         </Reveal>
 
-        {/* ── Results counter + grid ──────────────────────────────────────── */}
         <div className="mt-10">
-          {/* Live result count — politely announced by screen readers via aria-live on output */}
           <output
             aria-live="polite"
             aria-atomic="true"
             className="block text-text-muted text-sm mb-4 font-mono tabular-nums"
           >
-            Mostrando {filtered.length} de {pokemonMock.length} Pokémon
+            Mostrando {visible.length} de {filtered.length} (de {pokemon.length} en total)
           </output>
 
-          {/* Card grid */}
           <div
             className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"
             role="list"
             aria-label="Pokémon encontrados"
           >
             {reduced ? (
-              // Reduced motion: render cards without AnimatePresence/motion wrappers
               <>
-                {filtered.map((p) => (
+                {visible.map((p, i) => (
                   <div key={p.id} role="listitem">
-                    <PokemonCard pokemon={toCardData(p)} variant="compact" />
+                    <Link
+                      href={`/pokemon/${p.id}`}
+                      className="block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-yellow rounded-card"
+                      aria-label={`Ver ficha de ${p.name.es}`}
+                    >
+                      <PokemonCard pokemon={toCardData(p)} variant="compact" priority={i < 12} />
+                    </Link>
                   </div>
                 ))}
-                {filtered.length === 0 && (
+                {visible.length === 0 && (
                   <div className="col-span-full text-center py-16 text-text-muted font-body">
                     No se encontraron Pokémon con esos criterios.
                   </div>
@@ -221,8 +226,8 @@ export function PokedexExplorer() {
               </>
             ) : (
               <AnimatePresence mode="popLayout">
-                {filtered.length > 0 ? (
-                  filtered.map((p, i) => (
+                {visible.length > 0 ? (
+                  visible.map((p, i) => (
                     <motion.div
                       key={p.id}
                       role="listitem"
@@ -233,13 +238,20 @@ export function PokedexExplorer() {
                       transition={{
                         duration: 0.2,
                         ease: easing,
-                        delay: i * 0.03,
+                        delay: Math.min(i, 12) * 0.02,
                       }}
                     >
-                      <PokemonCard
-                        pokemon={toCardData(p)}
-                        variant="compact"
-                      />
+                      <Link
+                        href={`/pokemon/${p.id}`}
+                        className="block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-yellow rounded-card"
+                        aria-label={`Ver ficha de ${p.name.es}`}
+                      >
+                        <PokemonCard
+                          pokemon={toCardData(p)}
+                          variant="compact"
+                          priority={i < 12}
+                        />
+                      </Link>
                     </motion.div>
                   ))
                 ) : (
@@ -257,40 +269,29 @@ export function PokedexExplorer() {
               </AnimatePresence>
             )}
           </div>
-        </div>
 
-        {/* ── CTA ────────────────────────────────────────────────────────── */}
-        <Reveal className="text-center mt-16">
-          <a
-            href="/pokedex"
-            className={cn(
-              'inline-flex items-center gap-2',
-              'bg-accent-yellow text-text-inverse font-display font-bold',
-              'px-8 py-4 rounded-full text-base',
-              'transition-all duration-base ease-smooth',
-              'hover:bg-white hover:shadow-glow-yellow hover:scale-105',
-              'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-yellow',
-            )}
-          >
-            Ver los +1000 Pokémon
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </a>
-          <p className="text-text-muted text-sm mt-3 font-body">
-            Integración completa con PokéAPI próximamente
-          </p>
-        </Reveal>
+          {hasMore && (
+            <div className="flex justify-center mt-10">
+              <button
+                type="button"
+                onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+                className={cn(
+                  'inline-flex items-center gap-2',
+                  'bg-white/5 border border-white/10 text-text-primary font-body font-medium',
+                  'px-6 py-3 rounded-full text-sm',
+                  'transition-all duration-base ease-smooth',
+                  'hover:bg-white/10 hover:scale-105',
+                  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-yellow',
+                )}
+              >
+                Cargar más
+                <span className="text-text-muted font-mono text-xs">
+                  +{Math.min(PAGE_SIZE, filtered.length - visibleCount)}
+                </span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );
